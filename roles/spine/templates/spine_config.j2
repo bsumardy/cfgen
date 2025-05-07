@@ -1,0 +1,22 @@
+hostname {{ hostname }}
+
+service routing protocol model multi-agent
+username arista secret arista
+
+interface Loopback0
+  ip address {{ loopback_ip }}
+  description Router ID
+
+{% for intf, config in interfaces.items() %}
+interface {{ intf }}
+  description {{ config.description }}
+  no switchport
+  ip address {{ config.ip }}
+{% endfor %}
+ip routing
+router ospf 1
+  router-id {{ loopback_ip.split('/')[0] }}
+  network {{ loopback_ip.split('/')[0] }} 0.0.0.0 area 0
+{% for intf, config in interfaces.items() %}
+  network {{ config.ip.split('/')[0] }} 0.0.0.0 area 0
+{% endfor %}

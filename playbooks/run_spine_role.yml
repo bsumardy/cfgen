@@ -1,0 +1,6 @@
+- name: Load variables from spine host var file
+  include_vars: "{{ spine_file }}"
+
+- name: Apply spine role
+  include_role:
+    name: spine

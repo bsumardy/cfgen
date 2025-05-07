@@ -1,0 +1,27 @@
+hostname: leaf4
+interfaces:
+  Ethernet1:
+    description: MLAG Peer
+    trunk: true
+  Ethernet2:
+    description: Uplink to spine1
+    ip: 10.1.15.6/31
+  Ethernet3:
+    description: Uplink to spine2
+    ip: 10.1.15.14/31
+  Loopback0:
+    description: Router ID
+    ip: 10.1.14.6/32
+  Vlan10:
+    description: User LAN
+    ip: 10.1.0.125/26
+    vr_ip: 10.1.0.126
+  Vlan4094:
+    description: MLAG Virtual Interface
+    ip: 192.168.0.1/31
+loopback_ip: 10.1.14.6/32
+mlag_domain: MLAG1
+mlag_ip: 192.168.0.1
+mlag_peer_ip: 192.168.0.0
+vlan10_ip: 10.1.0.125/26
+vlan10_virtual_ip: 10.1.0.126

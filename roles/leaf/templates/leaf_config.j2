@@ -1,0 +1,80 @@
+hostname {{ hostname }}
+
+{# -------------------- GLOBAL CONFIG -------------------- #}
+ip virtual-router mac-address 00:00:11:11:22:22
+service routing protocol model multi-agent
+username arista secret arista
+ 
+{# -------------------- INTERFACES -------------------- #}
+{% for name, intf in interfaces.items() if not name.startswith("Vlan") %}
+interface {{ name }}
+  description {{ intf.description }}
+{% if 'trunk' in intf and intf.trunk %}
+  switchport mode trunk
+  switchport trunk allowed vlan all
+  switchport trunk group mlagpeer
+{% elif 'ip' in intf %}
+  no switchport
+  ip address {{ intf.ip }}
+{% endif %}
+{% endfor %}
+
+{# -------------------- VLAN INTERFACES -------------------- #}
+{% for name, intf in interfaces.items() if name.startswith("Vlan") %}
+interface {{ name }}
+  description {{ intf.description }}  
+  ip address {{ intf.ip }}
+{% if intf.vr_ip is defined %}
+  ip virtual-router address {{ intf.vr_ip }}
+{% endif %}
+  no autostate
+{% endfor %}
+interface Management1
+  ip address dhcp
+
+{# -------------------- VLAN CONFIG -------------------- #}
+{% set vlan_ids = [] %}
+{% for name in interfaces.keys() if name.startswith("Vlan") %}
+{% set vlan_id = name[4:] %}
+{% if vlan_id not in vlan_ids %}
+{% set _ = vlan_ids.append(vlan_id) %}
+{% endif %}
+{% endfor %}
+
+{% for vlan in vlan_ids %}
+vlan {{ vlan }}
+{% if vlan == "10" %}
+  name LAN
+{% elif vlan == "4094" %}
+  name MLAG
+  trunk group mlagpeer
+{% endif %}
+{% endfor %}
+no spanning-tree vlan-id 4094 
+
+mlag configuration
+   domain-id {{ mlag_domain }}
+   local-interface vlan4094
+   peer-address {{ mlag_peer_ip }}
+   peer-link Ethernet1
+{# -------------------- OSPF CONFIG -------------------- #}
+ip routing
+router ospf 1
+  router-id {{ loopback_ip.split('/')[0] }}
+{% set ospf_networks = [] %}
+{% for intf in interfaces.values() %}
+{% if 'ip' in intf and not intf.ip.startswith("192.168.0.") %}
+{% set ip = intf.ip.split('/')[0] %}
+{% if ip not in ospf_networks %}
+{% set _ = ospf_networks.append(ip) %}
+{% endif %}
+{% endif %}
+{% if 'vr_ip' in intf %}
+{% if intf.vr_ip not in ospf_networks %}
+{% set _ = ospf_networks.append(intf.vr_ip) %}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% for ip in ospf_networks %}
+  network {{ ip }} 0.0.0.0 area 0
+{% endfor %}

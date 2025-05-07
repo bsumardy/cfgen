@@ -1,0 +1,6 @@
+- name: Load variables from leaf host var file
+  include_vars: "{{ leaf_file }}"
+
+- name: Apply leaf role
+  include_role:
+    name: leaf

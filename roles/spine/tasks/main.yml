@@ -1,0 +1,4 @@
+- name: Generate config for spine switch
+  template:
+    src: spine_config.j2
+    dest: "generated_configs/{{ hostname }}.cfg"

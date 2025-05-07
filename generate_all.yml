@@ -1,0 +1,24 @@
+---
+- name: Generate all configs for site provisioning
+  hosts: localhost
+  gather_facts: false
+  vars:
+    leaf_files: "{{ query('fileglob', 'host_vars/leaf*.yml') }}"
+    spine_files: "{{ query('fileglob', 'host_vars/spine*.yml') }}"
+
+  tasks:
+    - name: Generate variable files using Python script
+      command: ./vars_generator/generate_vars.py {{ leaf_count }} {{ spine_count }}
+      delegate_to: localhost
+
+    - name: Run leaf role for each leaf host var file
+      include_tasks: playbooks/run_leaf_role.yml
+      loop: "{{ leaf_files }}"
+      loop_control:
+        loop_var: leaf_file
+
+    - name: Run spine role for each spine host var file
+      include_tasks: playbooks/run_spine_role.yml
+      loop: "{{ spine_files }}"
+      loop_control:
+        loop_var: spine_file
