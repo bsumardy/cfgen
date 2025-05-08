@@ -1,0 +1,27 @@
+hostname: spine4
+interfaces:
+  Ethernet1:
+    description: To spine4 <-> leaf1
+    ip: 10.1.15.49/31
+  Ethernet2:
+    description: To spine4 <-> leaf2
+    ip: 10.1.15.51/31
+  Ethernet3:
+    description: To spine4 <-> leaf3
+    ip: 10.1.15.53/31
+  Ethernet4:
+    description: To spine4 <-> leaf4
+    ip: 10.1.15.55/31
+  Ethernet5:
+    description: To spine4 <-> leaf5
+    ip: 10.1.15.57/31
+  Ethernet6:
+    description: To spine4 <-> leaf6
+    ip: 10.1.15.59/31
+  Ethernet7:
+    description: To spine4 <-> leaf7
+    ip: 10.1.15.61/31
+  Ethernet8:
+    description: To spine4 <-> leaf8
+    ip: 10.1.15.63/31
+loopback_ip: 10.1.14.4/32

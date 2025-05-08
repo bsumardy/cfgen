@@ -1,0 +1,18 @@
+all:
+  children:
+    spine:
+      hosts:
+        spine1: null
+        spine2: null
+        spine3: null
+        spine4: null
+    leaf:
+      hosts:
+        leaf1: null
+        leaf2: null
+        leaf3: null
+        leaf4: null
+        leaf5: null
+        leaf6: null
+        leaf7: null
+        leaf8: null

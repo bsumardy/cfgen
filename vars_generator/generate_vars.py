@@ -104,6 +104,24 @@ def generate_vars(leaf_count, spine_count):
     # Group Vars
     with open(os.path.join(group_vars_dir, "all.yml"), 'w') as f:
         yaml.dump({"ospf_area": 0}, f)
+    
+    # Generate inventory.yml
+    inventory = {
+        'all': {
+            'children': {
+                'spine': {
+                    'hosts': {f'spine{i+1}': None for i in range(spine_count)}
+                },
+                'leaf': {
+                    'hosts': {f'leaf{i+1}': None for i in range(leaf_count)}
+                }
+            }
+        }
+    }
+
+    inventory_file = os.path.join(base_dir, 'inventory.yml')
+    with open(inventory_file, 'w') as f:
+        yaml.dump(inventory, f, sort_keys=False)
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:

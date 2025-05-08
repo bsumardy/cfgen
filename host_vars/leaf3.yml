@@ -8,10 +8,16 @@ interfaces:
     ip: 10.1.15.4/31
   Ethernet3:
     description: Uplink to spine2
-    ip: 10.1.15.12/31
+    ip: 10.1.15.20/31
+  Ethernet4:
+    description: Uplink to spine3
+    ip: 10.1.15.36/31
+  Ethernet5:
+    description: Uplink to spine4
+    ip: 10.1.15.52/31
   Loopback0:
     description: Router ID
-    ip: 10.1.14.5/32
+    ip: 10.1.14.7/32
   Vlan10:
     description: User LAN
     ip: 10.1.0.124/26
@@ -19,7 +25,7 @@ interfaces:
   Vlan4094:
     description: MLAG Virtual Interface
     ip: 192.168.0.0/31
-loopback_ip: 10.1.14.5/32
+loopback_ip: 10.1.14.7/32
 mlag_domain: MLAG1
 mlag_ip: 192.168.0.0
 mlag_peer_ip: 192.168.0.1
