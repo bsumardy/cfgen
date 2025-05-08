@@ -21,6 +21,7 @@ Auto-generates configuration for:
 Run the playbook with your desired topology:
 
 _ansible-playbook generate_all.yml -e "leaf_count=4 spine_count=2"_ 
+
 This command generates configurations for 4 leaf and 2 spine switches. Replace leaf_count and spine_count as per needed.
 
 **Lab vs Production**
