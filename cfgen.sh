@@ -6,7 +6,14 @@ rm -rf tempdir
 
 # Create new directory and copy ALL files (including hidden) except tempdir itself
 mkdir tempdir
-rsync -a --exclude=tempdir ./ tempdir/  # Note: Using ./ and no trailing slash
+#rsync -a --exclude=tempdir ./ tempdir/  # Note: Using ./ and no trailing slash
+shopt -s dotglob
+for item in * .[^.]*; do
+    if [[ "$item" != "tempdir" ]]; then
+        cp -r "$item" tempdir/
+    fi
+done
+shopt -u dotglob
 
 echo "FROM python" >> tempdir/Dockerfile
 echo "RUN pip install ansible" >> tempdir/Dockerfile
